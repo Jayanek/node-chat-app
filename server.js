@@ -9,8 +9,16 @@ const server = http.createServer(app)
 
 const io = socketIO(server)
 
+const chatAppName = 'WeChat'
+
 io.on('connection',socket => {
-    io.emit('message','Hello')
+    socket.emit('message',`You are connected to the ${chatAppName}`)
+
+    socket.broadcast.emit('message',`User connected to the ${chatAppName}`)
+
+    socket.on('chat-message',msg => {
+        io.emit('message', msg)
+    })
 })
 
 app.use(express.static(path.join(__dirname,'public')))
