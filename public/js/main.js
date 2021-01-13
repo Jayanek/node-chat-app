@@ -2,6 +2,10 @@ const socket = io()
 
 const chatForm = document.getElementById('chat-form')
 
+const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix:false});
+
+socket.emit('room',room)
+
 socket.on('message',(msg) => {
   renderMessage(msg)
 })

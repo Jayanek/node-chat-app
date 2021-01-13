@@ -14,11 +14,17 @@ const chatAppName = 'WeChat'
 io.on('connection',socket => {
     socket.emit('message',`You are connected to the ${chatAppName}`)
 
-    socket.broadcast.emit('message',`User connected to the ${chatAppName}`)
+    socket.on('room', room => {
+        socket.join(room)
 
-    socket.on('chat-message',msg => {
-        io.emit('message', msg)
+        socket.to(room).broadcast.emit('message',`User connected to the ${chatAppName}`)
+        
+        socket.on('chat-message',msg => {
+            io.to(room).emit('message', msg)
+        })
     })
+
+    
 })
 
 app.use(express.static(path.join(__dirname,'public')))
